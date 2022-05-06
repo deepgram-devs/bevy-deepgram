@@ -1,0 +1,26 @@
+[package]
+name = "bevy-deepgram"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+# main game dependencies
+bevy = "0.7"
+heron = { version = "3.0.0", features = ["2d"] }
+
+# microphone input dependency
+portaudio = "0.7.0"
+
+# async runtime dependencies
+futures = "0.3.21"
+tokio = { version = "1.17.0", features = ["macros", "rt", "rt-multi-thread"] }
+
+# websocket dependencies
+http = "0.2.6"
+tokio-tungstenite = { version = "0.15.0", features = ["native-tls"] }
+tungstenite = "0.14.0"
+
+# utility dependencies
+crossbeam-channel = "0.5.4"
