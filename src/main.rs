@@ -182,15 +182,14 @@ fn f32_to_i16(sample: f32) -> i16 {
 /// also be executed in an async runtime.
 async fn connect_to_deepgram(
 ) -> tokio_tungstenite::WebSocketStream<tokio_tungstenite::MaybeTlsStream<tokio::net::TcpStream>> {
+    let api_key = std::env::var("DEEPGRAM_API_KEY").expect("Deepgram API Key is required.");
+
     // prepare the connection request with the api key authentication
     // TODO: don't hardcode the encoding, sample rate, or number of channels
-    let builder = http::Request::builder()
+    let request = http::Request::builder()
         .method(http::Method::GET)
-        .uri("wss://api.deepgram.com/v1/listen?encoding=linear16&sample_rate=44100&channels=1");
-
-    let api_key = std::env::var("DEEPGRAM_API_KEY").expect("Deepgram API Key is required.");
-    let builder = builder.header("Authorization", format!("Token {}", api_key));
-    let request = builder
+        .uri("wss://api.deepgram.com/v1/listen?encoding=linear16&sample_rate=44100&channels=1")
+        .header("Authorization", format!("Token {}", api_key))
         .body(())
         .expect("Failed to build a connection request to Deepgram.");
 
