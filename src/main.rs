@@ -89,7 +89,7 @@ fn spawn_enemy(mut commands: Commands) {
     commands
         .spawn_bundle(SpriteBundle {
             sprite: Sprite {
-                color: Color::rgb(0.75, 0.75, 0.75).into(),
+                color: Color::rgb(0.75, 0.75, 0.75),
                 custom_size: Some(Vec2::new(
                     ENEMY_HALF_EXTENDS * 2.0,
                     ENEMY_HALF_EXTENDS * 2.0,
@@ -168,13 +168,10 @@ fn keyboard_input(keys: Res<Input<KeyCode>>, mut query: Query<&mut Velocity, Wit
 /// Deepgram currently does not support f32 PCM.
 fn f32_to_i16(sample: f32) -> i16 {
     let sample = sample * 32768.0;
-    if sample > 32767.0 {
-        return 32767;
-    }
-    if sample < -32768.0 {
-        return -32768;
-    }
-    return sample as i16;
+
+    // This is a saturating cast. For more details, see:
+    // <https://doc.rust-lang.org/reference/expressions/operator-expr.html#numeric-cast>.
+    sample as i16
 }
 
 /// This async function must be executed in an async runtime, and it will return a websocket handle
