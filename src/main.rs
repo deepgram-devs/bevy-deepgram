@@ -338,21 +338,17 @@ fn control_player_with_deepgram(
     mut query: Query<&mut Velocity, With<Player>>,
 ) {
     while let Ok(audio_buffer) = microphone_receiver.rx.try_recv() {
-        let mut i16_samples = Vec::new();
-        for sample in audio_buffer {
-            i16_samples.push(f32_to_i16(sample));
-        }
-
-        let buffer: &[u8] = unsafe {
-            std::slice::from_raw_parts(i16_samples.as_ptr() as *const u8, i16_samples.len() * 2)
-        };
+        let sample_bytes = audio_buffer
+            .into_iter()
+            .flat_map(|sample| f32_to_i16(sample).to_le_bytes())
+            .collect();
 
         let rt = async_runtime.rt.clone();
 
         let _ = rt.block_on(async {
             deepgram_websocket
                 .tx
-                .send(tungstenite::Message::Binary(buffer.to_vec()))
+                .send(tungstenite::Message::Binary(sample_bytes))
                 .await
         });
     }
