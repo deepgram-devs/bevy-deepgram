@@ -20,11 +20,16 @@ looks like this should work like in other engines (like Unity/Godot/etc), but I 
 
 ## A Word On Dependencies.
 
-First of all, I found that I needed to install some development libraries that
-I was not expecting:
+For Ubuntu, I found that I needed to install the following:
 
 ```
 sudo apt-get install libasound2-dev libudev-dev
+```
+
+For macOS, I found that I needed to install the following:
+
+```
+brew install portaudio libsoundio pkg-config
 ```
 
 With that out of the way, these are the main Rust/Cargo dependencies:
